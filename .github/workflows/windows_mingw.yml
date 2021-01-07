@@ -48,6 +48,9 @@ jobs:
           tools: ${{ matrix.qt_tools }}
           cached: ${{steps.WindowsCacheQt.outputs.cache-hit }}
 
+      - shell: cmd
+        run: set
+
       - shell: pwsh
         run: |
           Get-ChildItem -Recurse -Path ../Qt # What's wrong with tools???
