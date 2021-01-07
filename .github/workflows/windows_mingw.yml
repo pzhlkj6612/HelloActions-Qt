@@ -24,10 +24,10 @@ jobs:
         qt_arch: [win64_mingw73, win32_mingw73]
         include:
           - qt_arch: win64_mingw73
-            qt_arch_install: mingw73_64
+            qt_tools_mingw_install: mingw730_64
             qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win64_mingw730"
           - qt_arch: win32_mingw73
-            qt_arch_install: mingw73
+            qt_tools_mingw_install: mingw730
             qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win32_mingw730"
     env:
       targetName: HelloActions-Qt.exe
@@ -46,7 +46,6 @@ jobs:
           target: ${{ matrix.qt_target }}
           arch: ${{ matrix.qt_arch }}
           tools: ${{ matrix.qt_tools }}
-          mirror: "http://mirrors.ocf.berkeley.edu/qt/" # Does something go wrong on download.qt.io?
           cached: ${{steps.WindowsCacheQt.outputs.cache-hit }}
 
       - uses: actions/checkout@v1
@@ -58,7 +57,7 @@ jobs:
         shell: cmd
         run: |
           qmake
-          %Qt5_Dir%\..\..\Tools\${{ matrix.qt_arch_install }}\bin\mingw32-make
+          %Qt5_Dir%\..\..\Tools\${{ matrix.qt_tools_mingw_install }}\bin\mingw32-make
 
       - name: package
         if: startsWith(github.event.ref, 'refs/tags/')
