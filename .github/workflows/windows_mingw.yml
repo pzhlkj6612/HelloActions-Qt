@@ -16,14 +16,19 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
+        # Find the version from:
+        #   https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt5_5126/Updates.xml
+        #   https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_mingw/Updates.xml
         qt_ver: [5.12.6]
         qt_target: [desktop]
         qt_arch: [win64_mingw73_64, win32_mingw73]
         include:
           - qt_arch: win64_mingw73_64
             qt_arch_install: mingw73_64
+            qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win64_mingw730"
           - qt_arch: win32_mingw73
             qt_arch_install: mingw73
+            qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win32_mingw730"
     env:
       targetName: HelloActions-Qt.exe
     steps:
@@ -34,35 +39,24 @@ jobs:
           path: ../Qt # "/Qt/Tools" should be cached as well
           key: ${{ runner.os }}-Qt/${{matrix.qt_ver}}/${{matrix.qt_arch}}
 
-      - name: Install Qt and tools x86
-        if: ${{ startsWith(matrix.qt_arch, 'win32') }}
+      - name: Install Qt
         uses: jurplel/install-qt-action@v2.5.3
         with:
           version: ${{ matrix.qt_ver }}
           target: ${{ matrix.qt_target }}
           arch: ${{ matrix.qt_arch }}
-          tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win32_mingw730"
-          cached: ${{steps.WindowsCacheQt.outputs.cache-hit }}
-
-      - name: Install Qt and tools x64
-        if: ${{ startsWith(matrix.qt_arch, 'win64') }}
-        uses: jurplel/install-qt-action@v2.5.3
-        with:
-          version: ${{ matrix.qt_ver }}
-          target: ${{ matrix.qt_target }}
-          arch: ${{ matrix.qt_arch }}
-          tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win64_mingw730"
+          tools: ${{ matrix.qt_tools }}
           cached: ${{steps.WindowsCacheQt.outputs.cache-hit }}
 
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
 
+      # mingw32-make.exe has been installed by Chocolatey, so we should specifiy the Qt's one.
       - name: build-mingw
         shell: cmd
         run: |
           qmake
-          # mingw32-make.exe has been installed by Chocolatey, so we should specifiy the Qt's one.
           %Qt5_Dir%\..\..\Tools\${{ matrix.qt_arch_install }}\bin\mingw32-make
 
       - name: package
