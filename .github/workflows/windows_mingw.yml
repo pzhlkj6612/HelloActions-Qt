@@ -27,7 +27,7 @@ jobs:
             qt_tools_mingw_install: mingw730_64
             qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win64_mingw730"
           - qt_arch: win32_mingw73
-            qt_tools_mingw_install: mingw730
+            qt_tools_mingw_install: mingw730_32
             qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win32_mingw730"
     env:
       targetName: HelloActions-Qt.exe
@@ -53,17 +53,14 @@ jobs:
 
       - shell: pwsh
         run: |
-          Get-ChildItem -Recurse -Path ../Qt # What's wrong with tools???
-          & "${Env:\Qt5_Dir}\..\..\Tools\${{ matrix.qt_tools_mingw_install }}\bin\mingw32-make"
+          Get-ChildItem -Recurse -Path ../Qt
 
       - uses: actions/checkout@v1
-        if: ${{ false }} # 
         with:
           fetch-depth: 1
 
       # mingw32-make.exe has been installed by Chocolatey, so we should specifiy the Qt's one.
       - name: build-mingw
-        if: ${{ false }} # 
         shell: cmd
         run: |
           qmake
