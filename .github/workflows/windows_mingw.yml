@@ -48,12 +48,18 @@ jobs:
           tools: ${{ matrix.qt_tools }}
           cached: ${{steps.WindowsCacheQt.outputs.cache-hit }}
 
+      - shell: pwsh
+        run: |
+          Get-ChildItem -Recurse -Path ../Qt # What's wrong with tools???
+
       - uses: actions/checkout@v1
+        if: ${{ false }} # 
         with:
           fetch-depth: 1
 
       # mingw32-make.exe has been installed by Chocolatey, so we should specifiy the Qt's one.
       - name: build-mingw
+        if: ${{ false }} # 
         shell: cmd
         run: |
           qmake
