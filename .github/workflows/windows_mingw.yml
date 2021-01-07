@@ -21,9 +21,9 @@ jobs:
         #   https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_mingw/Updates.xml
         qt_ver: [5.12.6]
         qt_target: [desktop]
-        qt_arch: [win64_mingw73_64, win32_mingw73]
+        qt_arch: [win64_mingw73, win32_mingw73]
         include:
-          - qt_arch: win64_mingw73_64
+          - qt_arch: win64_mingw73
             qt_arch_install: mingw73_64
             qt_tools: "tools_mingw,7.3.0-1-202004170606,qt.tools.win64_mingw730"
           - qt_arch: win32_mingw73
