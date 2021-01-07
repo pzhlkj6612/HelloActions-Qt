@@ -51,6 +51,7 @@ jobs:
       - shell: pwsh
         run: |
           Get-ChildItem -Recurse -Path ../Qt # What's wrong with tools???
+          & "${Env:\Qt5_Dir}\..\..\Tools\${{ matrix.qt_tools_mingw_install }}\bin\mingw32-make"
 
       - uses: actions/checkout@v1
         if: ${{ false }} # 
